@@ -26,35 +26,77 @@ class MinHeap:
         return len(self._data)
 
     def insert(self, value: float) -> None:
-        """Append `value`, then call _sift_up to restore the heap property."""
-        # TODO
-        raise NotImplementedError
+        """Append value, then restore the heap property."""
+        self._data.append(value)
+        self._sift_up(len(self._data) - 1)
 
     def _sift_up(self, index: int) -> None:
-        """
-        Recursive. Perform at most one swap, then recurse toward the
-        correct resting position. Do not use a while loop.
-        """
-        # TODO
-        raise NotImplementedError
+        """Recursively move a value upward until the heap property is restored."""
+        # Base case: root has no parent
+        if index == 0:
+            return
+
+        parent = (index - 1) // 2
+
+        # Swap if child is smaller than parent
+        if self._data[index] < self._data[parent]:
+            self._data[index], self._data[parent] = (
+                self._data[parent],
+                self._data[index]
+            )
+
+            # Recursively continue upward
+            self._sift_up(parent)
 
     def _sift_down(self, index: int) -> None:
-        """
-        Recursive. Perform at most one swap, then recurse toward the
-        correct resting position. Do not use a while loop.
-        """
-        # TODO
-        raise NotImplementedError
+        """Recursively move a value downward until the heap property is restored."""
+        size = len(self._data)
+        smallest = index
+
+        left = 2 * index + 1
+        right = 2 * index + 2
+
+        # Find the smallest among parent and valid children
+        if left < size and self._data[left] < self._data[smallest]:
+            smallest = left
+
+        if right < size and self._data[right] < self._data[smallest]:
+            smallest = right
+
+        # Base case: no child is smaller than the current node
+        if smallest == index:
+            return
+
+        # Swap with the smallest child
+        self._data[index], self._data[smallest] = (
+            self._data[smallest],
+            self._data[index]
+        )
+
+        # Recursively continue downward
+        self._sift_down(smallest)
 
     def extract_min(self) -> float:
-        """
-        Remove and return the smallest (highest-priority) value.
-        Move the last element to the root and call _sift_down.
-        Correctly handle a heap with 0 or 1 elements.
-        """
-        # TODO
-        raise NotImplementedError
+        """Remove and return the smallest value."""
+        # Handle an empty heap
+        if len(self._data) == 0:
+            raise IndexError("extract_min from empty heap")
 
+        # Save the minimum value
+        minimum = self._data[0]
+
+        # Handle a heap containing one element
+        if len(self._data) == 1:
+            self._data.pop()
+            return minimum
+
+        # Move the last element to the root
+        self._data[0] = self._data.pop()
+
+        # Restore the heap property
+        self._sift_down(0)
+
+        return minimum
 
 # ============================== VERIFICATION SUITE ==============================
 # Do not edit below this line.
